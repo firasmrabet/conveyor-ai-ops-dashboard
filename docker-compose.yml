@@ -1,0 +1,181 @@
+# =============================================================================
+#  Conveyor AI Ops — orchestration complète
+#  « Détection d'anomalies et maintenance prédictive d'un tapis roulant industriel »
+#
+#  Démarrage :   docker compose up --build          (mode SIMULATION, sans matériel)
+#  Matériel :    MODE=HARDWARE docker compose up     (bascule sur l'ESP32 réel)
+#
+#  Services :
+#    mosquitto   broker MQTT (avec TLS optionnel et mot de passe chiffré)
+#    backend     API FastAPI + simulateur + IA + WebSocket temps réel
+#    frontend    interface Next.js (Control Room, fiche moteur, analytics, MLOps…)
+#    redis       cache / pub-sub (optionnel, activé par REDIS_ENABLED=true)
+#    simulator   publication MQTT externe (profil « edge », mode HARDWARE/ HYBRIDE)
+# =============================================================================
+
+name: conveyor-ai-ops
+
+services:
+  # ---------------------------------------------------------------------------
+  #  Broker MQTT — cœur de la chaîne capteurs
+  # ---------------------------------------------------------------------------
+  mosquitto:
+    image: eclipse-mosquitto:2.0
+    container_name: conveyor-mosquitto
+    restart: unless-stopped
+    entrypoint: ["/bin/sh", "/mosquitto/config/entrypoint.sh"]
+    environment:
+      # Comptes créés au premier démarrage (jamais de secret dans le dépôt)
+      MQTT_USERNAME: ${MQTT_USERNAME:-conveyor}
+      MQTT_PASSWORD: ${MQTT_PASSWORD:-conveyor}
+      MQTT_BACKEND_USERNAME: ${MQTT_BACKEND_USERNAME:-conveyor-backend}
+      MQTT_BACKEND_PASSWORD: ${MQTT_BACKEND_PASSWORD:-conveyor}
+      MQTT_MONITOR_USERNAME: ${MQTT_MONITOR_USERNAME:-conveyor-monitor}
+      MQTT_MONITOR_PASSWORD: ${MQTT_MONITOR_PASSWORD:-monitor}
+    ports:
+      - "1883:1883"     # MQTT
+      - "9001:9001"     # MQTT over WebSocket (outils de diagnostic)
+    volumes:
+      - ./mosquitto/mosquitto.conf:/mosquitto/config/mosquitto.conf:ro
+      - ./mosquitto/acl:/mosquitto/config/acl:ro
+      - ./mosquitto/entrypoint.sh:/mosquitto/config/entrypoint.sh:ro
+      - mosquitto-data:/mosquitto/data
+      - mosquitto-log:/mosquitto/log
+    healthcheck:
+      test: ["CMD-SHELL", "mosquitto_sub -h localhost -p 1883 -t '$$SYS/#' -C 1 -i healthcheck -W 3 -u $$MQTT_USERNAME -P $$MQTT_PASSWORD >/dev/null 2>&1 || exit 1"]
+      interval: 15s
+      timeout: 6s
+      retries: 5
+      start_period: 10s
+    networks: [conveyor-net]
+
+  # ---------------------------------------------------------------------------
+  #  Backend FastAPI — ingestion, features, IA, alertes, maintenance, rapports
+  # ---------------------------------------------------------------------------
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    image: conveyor-ai-ops/backend:1.0.0
+    container_name: conveyor-backend
+    restart: unless-stopped
+    depends_on:
+      mosquitto:
+        condition: service_started
+    environment:
+      # --- Mode : SIMULATION (aucun matériel requis) | HARDWARE | HYBRID
+      MODE: ${MODE:-SIMULATION}
+      SIM_HZ: ${SIM_HZ:-8}
+      # --- Broker MQTT
+      MQTT_ENABLED: ${MQTT_ENABLED:-true}
+      MQTT_HOST: mosquitto
+      MQTT_PORT: 1883
+      MQTT_USERNAME: ${MQTT_USERNAME:-conveyor}
+      MQTT_PASSWORD: ${MQTT_PASSWORD:-conveyor}
+      MQTT_TOPIC_PREFIX: conveyor
+      MQTT_TLS: ${MQTT_TLS:-false}
+      # --- Cache / pub-sub (optionnel)
+      REDIS_ENABLED: ${REDIS_ENABLED:-false}
+      REDIS_URL: redis://redis:6379/0
+      # --- Base de données : SQLite par défaut (volume), PostgreSQL/TimescaleDB en option
+      DATABASE_URL: ${DATABASE_URL:-sqlite:////app/data/conveyor.db}
+      # --- Sécurité
+      SECRET_KEY: ${SECRET_KEY:-change-me-in-production}
+      CORS_ORIGINS: ${CORS_ORIGINS:-http://localhost:3000,http://127.0.0.1:3000}
+      # --- IA
+      ML_ACTIVE_BUNDLE: ${ML_ACTIVE_BUNDLE:-conveyor-synth}
+      ML_MODEL_VERSION: ${ML_MODEL_VERSION:-v1.4.0}
+      ML_RUN_INFERENCE_HZ: ${ML_RUN_INFERENCE_HZ:-1}
+      AI_CONFIRMATIONS: ${AI_CONFIRMATIONS:-3}
+      AI_DEBOUNCE_S: ${AI_DEBOUNCE_S:-90}
+      # --- Alertes (SMTP / webhook facultatifs)
+      ALERT_EMAIL_ENABLED: ${ALERT_EMAIL_ENABLED:-false}
+      SMTP_HOST: ${SMTP_HOST:-}
+      SMTP_PORT: ${SMTP_PORT:-587}
+      SMTP_USER: ${SMTP_USER:-}
+      SMTP_PASSWORD: ${SMTP_PASSWORD:-}
+      SMTP_FROM: ${SMTP_FROM:-alerts@conveyor.local}
+      ALERT_WEBHOOK_ENABLED: ${ALERT_WEBHOOK_ENABLED:-false}
+      WEBHOOK_URL: ${WEBHOOK_URL:-}
+      # --- Rétention des données
+      RAW_RETENTION_DAYS: ${RAW_RETENTION_DAYS:-7}
+      FEATURE_RETENTION_DAYS: ${FEATURE_RETENTION_DAYS:-90}
+      REPORT_COMPANY: ${REPORT_COMPANY:-Projet IoT & Edge AI}
+      REPORT_AUTHOR: ${REPORT_AUTHOR:-Cellule Maintenance Prédictive}
+      TZ: Africa/Tunis
+    volumes:
+      - backend-data:/app/data
+      - ./backend/artifacts:/app/artifacts
+    ports:
+      - "8000:8000"
+    networks: [conveyor-net]
+
+  # ---------------------------------------------------------------------------
+  #  Frontend Next.js — Control Room, jumeau 3D, analytique, MLOps, simulateur
+  # ---------------------------------------------------------------------------
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+      args:
+        # L'URL est résolue côté serveur Next (proxy /api → backend)
+        BACKEND_URL: http://backend:8000
+    image: conveyor-ai-ops/frontend:1.0.0
+    container_name: conveyor-frontend
+    restart: unless-stopped
+    depends_on:
+      - backend
+    environment:
+      BACKEND_URL: http://backend:8000
+      NEXT_PUBLIC_APP_NAME: Conveyor AI Ops
+      NEXT_PUBLIC_BACKEND_WS: ${NEXT_PUBLIC_BACKEND_WS:-}
+      TZ: Africa/Tunis
+    ports:
+      - "3000:3000"
+    networks: [conveyor-net]
+
+  # ---------------------------------------------------------------------------
+  #  Redis — cache, pub/sub et tampon circulaire partagé (profil « cache »)
+  # ---------------------------------------------------------------------------
+  redis:
+    image: redis:7-alpine
+    container_name: conveyor-redis
+    restart: unless-stopped
+    command: ["redis-server", "--appendonly", "yes", "--maxmemory", "256mb", "--maxmemory-policy", "allkeys-lru"]
+    volumes:
+      - redis-data:/data
+    ports:
+      - "6379:6379"
+    profiles: ["cache"]
+    networks: [conveyor-net]
+
+  # ---------------------------------------------------------------------------
+  #  Simulateur de passerelle ESP32 (émetteur MQTT externe)
+  #  Utile pour démontrer la chaîne réelle (MQTT) sans matériel :
+  #     docker compose --profile edge up simulator
+  # ---------------------------------------------------------------------------
+  simulator:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    image: conveyor-ai-ops/backend:1.0.0
+    container_name: conveyor-esp32-sim
+    restart: unless-stopped
+    depends_on:
+      mosquitto:
+        condition: service_started
+    command: ["python", "scripts/esp32_simulator.py", "--host", "mosquitto", "--motors", "M1,M2", "--hz", "8"]
+    volumes:
+      - ./scripts:/app/scripts:ro
+    profiles: ["edge"]
+    networks: [conveyor-net]
+
+volumes:
+  backend-data:
+  mosquitto-data:
+  mosquitto-log:
+  redis-data:
+
+networks:
+  conveyor-net:
+    driver: bridge

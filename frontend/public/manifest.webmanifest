@@ -1,0 +1,12 @@
+{
+  "name": "Conveyor AI Ops",
+  "short_name": "Conveyor AI",
+  "description": "Détection d'anomalies et maintenance prédictive d'un tapis roulant industriel",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#0A0E1A",
+  "theme_color": "#00E5FF",
+  "icons": [
+    { "src": "/favicon.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "any" }
+  ]
+}

@@ -1,0 +1,3 @@
+# Conveyor AI Ops — application de supervision interne
+User-agent: *
+Disallow: /

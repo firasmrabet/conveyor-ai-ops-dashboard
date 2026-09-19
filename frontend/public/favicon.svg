@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="64" height="64">
+  <defs>
+    <linearGradient id="g" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#00E5FF"/>
+      <stop offset="100%" stop-color="#7C5CFF"/>
+    </linearGradient>
+  </defs>
+  <rect width="64" height="64" rx="14" fill="#0A0E1A"/>
+  <!-- convoyeur stylisé -->
+  <rect x="9" y="34" width="46" height="7" rx="3.5" fill="url(#g)"/>
+  <circle cx="17" cy="44" r="5" fill="none" stroke="#00E5FF" stroke-width="2.4"/>
+  <circle cx="47" cy="44" r="5" fill="none" stroke="#7C5CFF" stroke-width="2.4"/>
+  <!-- colis -->
+  <rect x="26" y="22" width="12" height="11" rx="2" fill="#00E396"/>
+  <!-- signal capteur -->
+  <path d="M12 16 L20 16 L24 9 L28 23 L32 14 L36 16 L52 16" fill="none" stroke="#FFB020" stroke-width="2.2" stroke-linejoin="round" stroke-linecap="round"/>
+</svg>

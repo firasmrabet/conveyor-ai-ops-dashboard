@@ -1,0 +1,36 @@
+# =============================================================================
+#  Liste de contrôle d'accès (ACL) — principe du moindre privilège
+#
+#  conveyor        : la passerelle ESP32 (publication télémétrie, lecture des commandes)
+#  conveyor-backend: le serveur (lecture de tout, publication des commandes)
+#  conveyor-monitor: poste de supervision en lecture seule (diagnostic)
+# =============================================================================
+
+# --- Passerelle ESP32 : publie ses données, écoute ses commandes -------------
+user conveyor
+topic read  $SYS/#
+topic write conveyor/m1/telemetry
+topic write conveyor/m2/telemetry
+topic write conveyor/m1/features
+topic write conveyor/m2/features
+topic write conveyor/m1/edge_inference
+topic write conveyor/m2/edge_inference
+topic write conveyor/status
+topic write conveyor/+/heartbeat
+topic read  conveyor/cmd/#
+topic read  conveyor/config/#
+
+# --- Backend : lit tout, commande tout ---------------------------------------
+user conveyor-backend
+topic read  conveyor/#
+topic write conveyor/cmd/#
+topic write conveyor/config/#
+topic write conveyor/api/#
+
+# --- Supervision en lecture seule --------------------------------------------
+user conveyor-monitor
+topic read  conveyor/#
+topic read  $SYS/#
+
+# --- Anonyme : interdit -------------------------------------------------------
+topic deny #

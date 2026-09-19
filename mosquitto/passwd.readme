@@ -1,0 +1,9 @@
+Le fichier `passwd` (mots de passe MQTT chiffrés) est généré automatiquement par
+le conteneur au premier démarrage à partir des variables MQTT_USERNAME / MQTT_PASSWORD.
+Pour le régénérer manuellement :
+
+    docker compose exec mosquitto mosquitto_passwd -b -c /mosquitto/config/passwd conveyor <motdepasse>
+    docker compose exec mosquitto mosquitto_passwd -b /mosquitto/config/passwd conveyor-backend <motdepasse>
+    docker compose exec mosquitto mosquitto_passwd -b /mosquitto/config/passwd conveyor-monitor <motdepasse>
+
+Puis redémarrer le broker : docker compose restart mosquitto

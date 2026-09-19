@@ -1,0 +1,110 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* ==========================================================================
+   Conveyor AI Ops — Design system (thème industriel sombre par défaut)
+   ========================================================================== */
+:root {
+  --bg: 10 14 26;
+  --bg-soft: 15 20 32;
+  --surface: 22 27 43;
+  --text: 232 236 245;
+  --muted: 148 163 184;
+  --line: 255 255 255;
+  --line-alpha: 0.06;
+  --cyan: 0 229 255;
+  --green: 0 227 150;
+  --amber: 255 176 32;
+  --red: 255 77 79;
+  --violet: 124 92 255;
+}
+
+.light {
+  --bg: 244 246 251;
+  --bg-soft: 236 239 246;
+  --surface: 255 255 255;
+  --text: 15 20 32;
+  --muted: 90 100 120;
+  --line: 15 20 32;
+  --line-alpha: 0.08;
+}
+
+* { border-color: rgb(var(--line) / var(--line-alpha)); }
+
+html, body {
+  height: 100%;
+  background-color: rgb(var(--bg));
+  color: rgb(var(--text));
+}
+
+body {
+  background-image: radial-gradient(circle at 12% -10%, rgb(var(--cyan) / 0.07), transparent 42%),
+                    radial-gradient(circle at 100% 0%, rgb(var(--violet) / 0.08), transparent 38%);
+  background-attachment: fixed;
+  font-feature-settings: 'tnum' 1, 'cv05' 1;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* --- Primitives réutilisables --- */
+.panel {
+  @apply rounded-2xl border bg-[rgb(var(--surface)/0.72)] backdrop-blur-md;
+  border-color: rgb(var(--line) / var(--line-alpha));
+  box-shadow: 0 12px 34px -22px rgba(0, 0, 0, 0.95);
+}
+
+.panel-hover { @apply transition-all duration-200 hover:-translate-y-[2px]; }
+.panel-hover:hover { box-shadow: 0 18px 40px -22px rgba(0, 0, 0, 0.95), 0 0 0 1px rgb(var(--cyan) / 0.14); }
+
+.num { font-family: var(--font-mono), 'JetBrains Mono', monospace; font-variant-numeric: tabular-nums; }
+
+.label { @apply text-[10px] uppercase tracking-[0.14em] text-[rgb(var(--muted))]; }
+
+.glow-cyan { box-shadow: 0 0 22px -8px rgb(var(--cyan) / 0.7); }
+.text-glow { text-shadow: 0 0 18px rgb(var(--cyan) / 0.45); }
+
+/* --- Scrollbars fines --- */
+::-webkit-scrollbar { width: 8px; height: 8px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: rgb(var(--line) / 0.14); border-radius: 8px; }
+::-webkit-scrollbar-thumb:hover { background: rgb(var(--line) / 0.24); }
+
+/* --- Focus accessible --- */
+:focus-visible { outline: 2px solid rgb(var(--cyan) / 0.65); outline-offset: 2px; border-radius: 6px; }
+
+/* --- Skeleton de chargement --- */
+.skeleton {
+  position: relative; overflow: hidden;
+  background: rgb(var(--line) / 0.05); border-radius: 10px;
+}
+.skeleton::after {
+  content: ''; position: absolute; inset: 0; transform: translateX(-100%);
+  background: linear-gradient(90deg, transparent, rgb(var(--line) / 0.08), transparent);
+  animation: shimmer 1.6s infinite;
+}
+@keyframes shimmer { 100% { transform: translateX(100%); } }
+
+/* --- Accessibilité : réduction des animations --- */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation-duration: 0.001ms !important; animation-iteration-count: 1 !important; transition-duration: 0.001ms !important; }
+}
+.reduce-motion *, .reduce-motion *::before, .reduce-motion *::after {
+  animation-duration: 0.001ms !important; animation-iteration-count: 1 !important; transition-duration: 0.001ms !important;
+}
+
+/* --- Scrollbar des flux --- */
+.scroll-thin { scrollbar-width: thin; }
+
+/* --- Champs de formulaire (utilisés par la page Alertes / l'admin) --- */
+.input {
+  width: 100%;
+  border-radius: 12px;
+  border: 1px solid rgb(var(--line) / 0.12);
+  background: rgb(var(--line) / 0.03);
+  padding: 6px 10px;
+  font-size: 11.5px;
+  color: rgb(var(--text));
+  outline: none;
+}
+.input:focus { border-color: rgb(var(--cyan) / 0.45); }
+.input option { background: #0F1420; }

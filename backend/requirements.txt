@@ -1,0 +1,31 @@
+# --- API / serveur ---
+fastapi==0.115.6
+uvicorn[standard]==0.34.0
+python-multipart==0.0.20
+pydantic==2.10.4
+pydantic-settings==2.7.0
+
+# --- Persistance ---
+SQLModel==0.0.22
+SQLAlchemy==2.0.36
+
+# --- Sécurité ---
+PyJWT==2.10.1
+passlib==1.7.4
+
+# --- Temps réel / IoT ---
+paho-mqtt==2.1.0
+websockets==14.1
+
+# --- Données / ML ---
+numpy==2.2.1
+scikit-learn==1.6.0     # optionnel : utilisé si un artefact .joblib est présent
+joblib==1.4.2
+
+# --- Rapports ---
+reportlab==4.2.5
+
+# --- Divers ---
+python-dateutil==2.9.0.post0
+httpx==0.28.1
+apscheduler==3.11.0
