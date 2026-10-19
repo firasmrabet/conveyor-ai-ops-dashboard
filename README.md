@@ -1,15 +1,46 @@
-# Conveyor AI Ops — Détection d'anomalies & maintenance prédictive d'un tapis roulant industriel
+<p align="center">
+  <img src="assets/hero.png" alt="Conveyor AI Ops — détection d'anomalies et maintenance prédictive" width="100%"/>
+</p>
 
-Système complet **IoT + Edge AI + jumeau numérique** pour un tapis roulant piloté par deux
-moteurs pas à pas (M1 = gauche, M2 = droite) : acquisition capteurs sur ESP32, transport MQTT,
-inférence IA (anomalie, classification de défaut, durée de vie restante), alerting avec
-maintenance prescriptive, tableaux de bord temps réel et rapport PDF.
+<p align="center">
+  <img src="https://img.shields.io/badge/Python-3776AB?style=flat-square&logo=python&logoColor=white" alt="Python"/>
+  <img src="https://img.shields.io/badge/FastAPI-009688?style=flat-square&logo=fastapi&logoColor=white" alt="FastAPI"/>
+  <img src="https://img.shields.io/badge/Next.js-000000?style=flat-square&logo=nextdotjs&logoColor=white" alt="Next.js"/>
+  <img src="https://img.shields.io/badge/MQTT-660066?style=flat-square&logo=mqtt&logoColor=white" alt="MQTT"/>
+  <img src="https://img.shields.io/badge/ESP32-E7352C?style=flat-square&logo=espressif&logoColor=white" alt="ESP32"/>
+  <img src="https://img.shields.io/badge/Docker-2496ED?style=flat-square&logo=docker&logoColor=white" alt="Docker"/>
+  <img src="https://img.shields.io/badge/status-prêt_démo-2ea043?style=flat-square" alt="Status"/>
+</p>
 
-> **Le projet est immédiatement exécutable sans matériel** : au premier `docker compose up`,
-> le mode `SIMULATION` génère un banc physiquement réaliste (vibration, courant, température,
-> usure, défauts injectables) et remplit les tableaux de bord. Quand la carte est prête, on
-> bascule sur `MODE=HARDWARE` **sans redémarrer le code** : le backend se contente d'écouter
-> les trames MQTT de l'ESP32.
+<h1 align="center">Conveyor AI Ops</h1>
+
+<p align="center">
+Détection d'anomalies, classification de défauts et <b>durée de vie restante (RUL)</b> pour un tapis roulant industriel piloté par deux moteurs pas à pas.<br/>
+Acquisition <b>ESP32</b> · transport <b>MQTT</b> · inférence <b>Edge AI</b> · jumeau numérique · tableau de bord temps réel.
+</p>
+
+<p align="center">
+  <a href="#1-aperçu-fonctionnel">Aperçu</a> ·
+  <a href="#2-architecture">Architecture</a> ·
+  <a href="#3-démarrage-rapide">Démarrage rapide</a> ·
+  <a href="#4-les-8-pages-du-tableau-de-bord">Les 8 pages</a> ·
+  <a href="#5-protocole-mqtt">MQTT</a> ·
+  <a href="#6-pipeline-ia">Pipeline IA</a>
+</p>
+
+---
+
+## 📸 Aperçu
+
+<p align="center">
+  <img src="docs/screenshots/01-salle-de-controle.png" width="49%" alt="Salle de contrôle — vue temps réel"/>
+  <img src="docs/screenshots/03-analyse-historique.png" width="49%" alt="Analyse historique"/>
+</p>
+<p align="center">
+  <sub>Salle de contrôle temps réel · analyse historique — 8 autres captures dans <a href="docs/screenshots"><code>docs/screenshots</code></a></sub>
+</p>
+
+> 💡 Le projet est **exécutable sans matériel** : en mode `SIMULATION`, un banc physiquement réaliste (vibration, courant, température, usure, défauts injectables) alimente les tableaux de bord. Le passage en `MODE=HARDWARE` se fait sans redémarrer le code.
 
 ---
 
@@ -118,7 +149,8 @@ maintenance prescriptive, tableaux de bord temps réel et rapport PDF.
 ### 3.1 Avec Docker (recommandé — rien à installer d'autre)
 
 ```bash
-unzip conveyor-ai-ops.zip && cd conveyor-ai-ops
+git clone https://github.com/firasmrabet/conveyor-ai-ops-dashboard.git
+cd conveyor-ai-ops-dashboard
 cp .env.example .env                 # valeurs par défaut prêtes à l'emploi
 docker compose up --build            # → http://localhost:3000
 ```

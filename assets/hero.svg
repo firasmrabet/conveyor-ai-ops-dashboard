@@ -1,0 +1,84 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="280" viewBox="0 0 1200 280" role="img" aria-label="Conveyor AI Ops — PREDICTIVE MAINTENANCE">
+  <title>Conveyor AI Ops — PREDICTIVE MAINTENANCE</title>
+  <defs>
+    <linearGradient id="bg-conveyor" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#060A12"/>
+      <stop offset="0.55" stop-color="#091524"/>
+      <stop offset="1" stop-color="#0B1F33"/>
+    </linearGradient>
+    <radialGradient id="glow-conveyor" cx="50%" cy="50%" r="50%">
+      <stop offset="0" stop-color="#34D399" stop-opacity="0.28"/>
+      <stop offset="1" stop-color="#34D399" stop-opacity="0"/>
+    </radialGradient>
+    <linearGradient id="fade-conveyor" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0" stop-color="#060A12" stop-opacity="0.92"/>
+      <stop offset="0.52" stop-color="#070D18" stop-opacity="0.55"/>
+      <stop offset="1" stop-color="#070D18" stop-opacity="0"/>
+    </linearGradient>
+    <linearGradient id="rule-conveyor" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0" stop-color="#34D399" stop-opacity="0.95"/>
+      <stop offset="0.35" stop-color="#34D399" stop-opacity="0.25"/>
+      <stop offset="1" stop-color="#34D399" stop-opacity="0"/>
+    </linearGradient>
+    <pattern id="dots-conveyor" width="24" height="24" patternUnits="userSpaceOnUse">
+      <circle cx="1.2" cy="1.2" r="1.1" fill="#2A4766" opacity="0.4"/>
+    </pattern>
+  </defs>
+
+  <rect width="1200" height="280" fill="url(#bg-conveyor)"/>
+  <rect width="1200" height="280" fill="url(#dots-conveyor)"/>
+  <rect x="0.75" y="0.75" width="1198.5" height="278.5" rx="14" fill="none" stroke="#1B3350"/>
+  <rect x="0" y="0" width="1200" height="280" fill="url(#fade-conveyor)"/>
+  <rect x="18" y="0.75" width="330" height="2.4" rx="1.2" fill="url(#rule-conveyor)"/>
+
+  <g transform="translate(600,18) scale(0.88) translate(0,0)">
+      <g>
+    <circle cx="470" cy="120" r="120" fill="#34D399" opacity="0.06"/>
+    <path d="M300 176 H604" stroke="#34D399" stroke-opacity="0.35" stroke-width="1.5"/>
+    <path d="M300 208 H604" stroke="#34D399" stroke-opacity="0.35" stroke-width="1.5"/>
+    <g>
+      <rect x="330" y="158" width="34" height="24" rx="4" fill="#34D399" fill-opacity="0.85">
+        <animate attributeName="x" values="310;560;310" dur="11s" repeatCount="indefinite"/>
+      </rect>
+      <rect x="410" y="158" width="34" height="24" rx="4" fill="#34D399" fill-opacity="0.45">
+        <animate attributeName="x" values="380;630;380" dur="11s" repeatCount="indefinite"/>
+      </rect>
+      <rect x="470" y="158" width="34" height="24" rx="4" fill="#34D399" fill-opacity="0.25">
+        <animate attributeName="x" values="440;690;440" dur="11s" repeatCount="indefinite"/>
+      </rect>
+    </g>
+    <g fill="none" stroke="#34D399" stroke-width="2" stroke-opacity="0.75">
+      <circle cx="344" cy="212" r="19"/><circle cx="424" cy="212" r="19"/><circle cx="504" cy="212" r="19"/><circle cx="584" cy="212" r="19"/>
+      <g stroke-opacity="0.45" stroke-width="1.2">
+        <path d="M344 196 v32 M328 212 h32"/><path d="M424 196 v32 M408 212 h32"/>
+        <path d="M504 196 v32 M488 212 h32"/><path d="M584 196 v32 M568 212 h32"/>
+      </g>
+    </g>
+    <g stroke="#34D399" stroke-width="1.8" fill="none" opacity="0.85">
+      <path d="M318 86 H352 L372 66 L392 106 L412 76 L432 96 L452 86 H604"/>
+      <animate attributeName="opacity" values="0.4;0.95;0.4" dur="4s" repeatCount="indefinite"/>
+    </g>
+    <g font-family="'JetBrains Mono', 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, monospace" font-size="8.5" fill="#34D399" opacity="0.75">
+    </g>
+    <g stroke="#34D399" stroke-opacity="0.9" stroke-width="2">
+      <circle cx="540" cy="86" r="4" fill="#34D399">
+        <animate attributeName="r" values="3;6;3" dur="1.8s" repeatCount="indefinite"/>
+      </circle>
+    </g>
+  </g>
+  </g>
+
+  <g font-family="Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif">
+    <text x="56" y="86" font-size="11.5" font-weight="700" letter-spacing="2.6" fill="#34D399">PREDICTIVE MAINTENANCE</text>
+    <text x="56" y="140" font-size="46" font-weight="800" letter-spacing="-0.6" fill="#F5F9FF">Conveyor AI Ops</text>
+    <text x="56" y="172" font-size="15.5" font-weight="450" fill="#8FAFCB">Jumeau numérique d'un tapis roulant : ESP32, MQTT, détection d'anomalies et RUL.</text>
+  </g>
+  <rect x="56" y="206" width="143" height="30" rx="8" fill="#0B1727" stroke="#24405F"/>
+  <text x="127" y="226" text-anchor="middle" font-family="Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="11.5" font-weight="600" letter-spacing="0.6" fill="#9FC0DE">FastAPI · Next.js</text>
+  <rect x="209" y="206" width="136" height="30" rx="8" fill="#0B1727" stroke="#24405F"/>
+  <text x="276" y="226" text-anchor="middle" font-family="Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="11.5" font-weight="600" letter-spacing="0.6" fill="#9FC0DE">MQTT · Mosquitto</text>
+  <rect x="354" y="206" width="128" height="30" rx="8" fill="#0B1727" stroke="#24405F"/>
+  <text x="419" y="226" text-anchor="middle" font-family="Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="11.5" font-weight="600" letter-spacing="0.6" fill="#9FC0DE">TinyML · Docker</text>
+  <text x="56" y="256" font-family="'JetBrains Mono', 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, monospace" font-size="10.5" letter-spacing="0.8" fill="#4A6584">github.com/firasmrabet/conveyor-ai-ops-dashboard</text>
+  <text x="1168" y="256" text-anchor="end" font-family="'JetBrains Mono', 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, monospace" font-size="10.5" letter-spacing="1.4" fill="#4A6584">ENISo · 2026</text>
+</svg>
